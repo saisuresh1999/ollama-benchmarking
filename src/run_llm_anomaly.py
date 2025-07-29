@@ -61,7 +61,6 @@ def main():
     with open(args.data) as f:
         data = json.load(f)
 
-    # Prepare batches
     BATCH_SIZE = args.batch_size
     unprocessed = [
         (posting_id, lines)
@@ -69,7 +68,6 @@ def main():
         if posting_id not in existing_posting_ids
     ]
 
-    results = []
     for i in range(0, len(unprocessed), BATCH_SIZE):
         batch = unprocessed[i:i+BATCH_SIZE]
         batch_ids = [pid for pid, _ in batch]
@@ -84,6 +82,8 @@ def main():
         # Make sure responses is a list (even if batch size = 1)
         if isinstance(responses, dict):
             responses = [responses]
+
+        results = []
         for (posting_id, _), resp in zip(batch, responses):
             llm_out = resp["review"] if "review" in resp else resp.get("text", "")
             parsed = extract_json_response(llm_out)
@@ -97,9 +97,8 @@ def main():
             else:
                 print(f"[WARN] No valid JSON for {posting_id}: {llm_out[:60]}", flush=True)
 
-    # Append new results to CSV
-    write_results_append(results, OUTPUT_CSV)
-    print(f"Appended {len(results)} results to {OUTPUT_CSV}", flush=True)
+        write_results_append(results, OUTPUT_CSV)
+        print(f"Appended {len(results)} results to {OUTPUT_CSV} (batch {i//BATCH_SIZE + 1})", flush=True)
 
 if __name__ == "__main__":
     main()
