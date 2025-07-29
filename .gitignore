@@ -5,3 +5,9 @@ output
 slurm_templates/run_llm_anomaly_template.slurm
 logs
 slurm_jobs
+src/inference/__pycache__/dispatcher.cpython-310.pyc
+src/inference/__pycache__/hf_infer.cpython-310.pyc
+src/inference/helpers/__pycache__/hf_constants.cpython-310.pyc
+src/inference/helpers/__pycache__/load_hf_causal_lm.cpython-310.pyc
+src/inference/helpers/__pycache__/model_loader.cpython-310.pyc
+src/prompts/__pycache__/prompt_templates.cpython-310.pyc

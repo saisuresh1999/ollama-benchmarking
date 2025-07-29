@@ -39,7 +39,7 @@ def hf_response(paper, temperature, model, tokenizer, model_name=None):
     inputs = tokenizer(prompts, return_tensors="pt", padding=True).to("cuda")
     input_token_count = inputs["input_ids"].shape[1]
 
-    # stop_string = "<|endofanalysis|>"
+    stop_string = "<|endofanalysis|>"
     # stopping_criteria = StoppingCriteriaList([StopOnStringCriteria(stop_string, tokenizer)])
 
     try:
