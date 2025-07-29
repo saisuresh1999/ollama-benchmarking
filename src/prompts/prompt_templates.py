@@ -1,6 +1,6 @@
 def anomaly_prompt(lines):
     """
-    Prompt for LLM anomaly detection (for highly imbalanced synthetic data).
+    Prompt for LLM anomaly detection (for highly imbalanced synthetic data, with strong class prior).
     """
     gl_text = "\n".join([
         f"Text: {r['text']}, GL Account: {r['gl_account_name']} ({r['gl_account']}), "
@@ -37,11 +37,17 @@ def anomaly_prompt(lines):
         "    • Multiple unusual fields together (wrong user, time, and amount)\n"
         "- If in doubt, err on the side of NOT calling something anomalous—false positives are very costly for auditors.\n"
     )
+    prior_statement = (
+        "Remember: only about 1 in 1000 entries is truly anomalous. It is expected that most entries will be normal.\n"
+        'Unless there is an explicit contradiction or impossibility, you must respond with "anomaly": 0. '
+        "Do not call something an anomaly just because it seems rare or slightly unusual.\n"
+    )
     prompt = (
         "You are a highly experienced financial auditor performing journal entry anomaly detection "
         "for a simulated trading company. Carefully analyze the following multi-line journal entry.\n\n"
         f"{legend}\n"
         f"{business_context}\n"
+        f"{prior_statement}\n"
         "Respond in **valid JSON only** and **terminate with <|endofanalysis|>**.\n"
         "Your output format (example):\n"
         "{\n"
